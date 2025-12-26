@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="slider-area">
+    <div class="single-slider slider-height2 d-flex align-items-center"
+         style="background:#1f2b7b; padding:70px 0; position:relative;">
+        <div class="container text-center">
+            <div style="font-size:70px;">
+                {% if user.user_type == 'freelancer' %}
+                    🧑‍💻
+                {% else %}
+                    🧑‍💼
+                {% endif %}
+            </div>
+            <h1 style="font-size:32px; font-weight:700; color:white;">
+                Edit {{ user.user_type|capfirst }} Profile
+            </h1>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Form -->
+<div class="container mt-5 mb-5" style="max-width:600px;">
+    <div class="card shadow" style="border-radius:20px;">
+        <div class="card-body p-4">
+
+            <h4 class="text-center mb-4">Update Profile Details</h4>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Profile Image Preview -->
+                <div class="text-center mb-4">
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" class="rounded-circle shadow"
+                             style="width:160px; height:160px; object-fit:cover;">
+                    {% else %}
+                        <img src="{% static 'assets/img/default-avatar.png' %}" class="rounded-circle shadow"
+                             style="width:160px; height:160px; object-fit:cover;">
+                    {% endif %}
+                </div>
+
+                <!-- Upload Field -->
+                <div class="mb-4">
+                    <label><strong>Upload New Profile Image</strong></label>
+                    {{ form.profile_image }}
+                </div>
+
+                {% if user.user_type == 'freelancer' %}
+                    <!-- Freelancer Fields -->
+                    <div class="mb-4">
+                        <label><strong>Skills</strong></label>
+                        {{ form.skills }}
+                    </div>
+                    <div class="mb-4">
+                        <label><strong>Experience (years)</strong></label>
+                        {{ form.experience }}
+                    </div>
+                    <div class="mb-4">
+                        <label><strong>Hourly Rate (₹)</strong></label>
+                        {{ form.hourly_rate }}
+                    </div>
+                {% else %}
+                    <!-- Client Fields -->
+                    <div class="mb-4">
+                        <label><strong>Company Name</strong></label>
+                        {{ form.company_name }}
+                    </div>
+                {% endif %}
+
+                <!-- Save Button -->
+                <button type="submit" class="btn btn-primary w-100"
+                        style="padding:10px; font-size:16px;">
+                    Save Changes
+                </button>
+
+                <!-- Cancel -->
+                {% if user.user_type == 'freelancer' %}
+                    <a href="{% url 'freelancer_dashboard' %}" class="btn btn-secondary w-100 mt-3"
+                       style="padding:10px; font-size:16px;">
+                        Cancel
+                    </a>
+                {% else %}
+                    <a href="{% url 'client_dashboard' %}" class="btn btn-secondary w-100 mt-3"
+                       style="padding:10px; font-size:16px;">
+                        Cancel
+                    </a>
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow p-4">
+
+        <!-- 🔹 Freelancer Basic Info -->
+        <div class="text-center">
+            {% if freelancer_profile.profile_image %}
+                <img src="{{ freelancer_profile.profile_image.url }}"
+                     class="rounded-circle" width="120">
+            {% else %}
+                <img src="{% static 'assets/img/default-avatar.png' }}"
+                     class="rounded-circle" width="120">
+            {% endif %}
+
+            <h3 class="mt-3">{{ freelancer_user.username }}</h3>
+            <p class="text-muted">Freelancer</p>
+
+            {% if avg_rating %}
+                <p>
+                    ⭐ <strong>{{ avg_rating|floatformat:1 }}/5</strong>
+                </p>
+            {% else %}
+                <p class="text-muted">No ratings yet</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- 🔹 Freelancer Details -->
+        <p><strong>Experience:</strong> {{ freelancer_profile.experience }}</p>
+        <p><strong>Hourly Rate:</strong> ₹{{ freelancer_profile.hourly_rate }}</p>
+        <p><strong>Skills:</strong> {{ freelancer_profile.skills }}</p>
+
+        <hr>
+
+        <!-- 🔹 Client Reviews Section -->
+        <h4>Client Reviews</h4>
+
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="mb-1">
+                            {{ review.client.username }}
+                            — {{ review.rating }} ⭐
+                        </h6>
+                        <p class="mb-1">{{ review.feedback }}</p>
+                        <small class="text-muted">
+                            {{ review.created_at|date:"d M Y" }}
+                        </small>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No reviews yet.</p>
+        {% endif %}
+
+        <!-- 🔹 Back Button -->
+        <div class="text-center">
+            <a href="javascript:history.back()"
+               class="btn btn-secondary mt-3">
+                Back
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

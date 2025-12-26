@@ -1,0 +1,73 @@
+
+
+
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>Proposals for: {{ project.title }}</h2>
+    <hr>
+
+    {% if proposals %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Freelancer</th>
+                    <th>Profile</th>
+                    <th>Cover Letter</th>
+                    <th>Bid Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for proposal in proposals %}
+                <tr>
+                    <!-- FREELANCER NAME -->
+                    <td>{{ proposal.freelancer.username }}</td>
+
+                    <!-- PROFILE LINK -->
+                    <td>
+                        <a href="{% url 'view_freelancer_profile' proposal.freelancer.id %}"
+                           class="btn btn-outline-primary btn-sm">
+                            View Profile
+                        </a>
+                    </td>
+
+                    <td>{{ proposal.cover_letter }}</td>
+
+                    <td>₹ {{ proposal.bid_amount }}</td>
+
+                    <td>{{ proposal.status }}</td>
+
+                    <td>
+                        {% if proposal.status == "pending" %}
+                            <a href="{% url 'approve_proposal' proposal.id %}"
+                               class="btn btn-success btn-sm">
+                               Approve
+                            </a>
+
+                            <a href="{% url 'reject_proposal' proposal.id %}"
+                               class="btn btn-danger btn-sm">
+                               Reject
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    {% else %}
+        <p class="text-muted">No proposals submitted yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

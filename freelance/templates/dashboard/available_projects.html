@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Available Projects</h2>
+    <hr>
+
+    {% for p in projects %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4>{{ p.title }}</h4>
+                <p>{{ p.description|truncatewords:20 }}</p>
+                <a href="{% url 'apply_to_project' p.id %}" class="btn btn-primary">Apply</a>
+            </div>
+        </div>
+    {% empty %}
+        <p>No projects found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

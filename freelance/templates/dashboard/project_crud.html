@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5" style="max-width:700px;">
+    <div class="card shadow p-4" style="border-radius:15px;">
+
+        <!-- Heading based on mode -->
+        {% if mode == "add" %}
+            <h3 class="text-center mb-4">Add New Project</h3>
+        {% elif mode == "edit" %}
+            <h3 class="text-center mb-4">Edit Project</h3>
+        {% elif mode == "delete" %}
+            <h3 class="text-center mb-4 text-danger">Delete Project</h3>
+            <p class="text-center">Are you sure you want to delete "<strong>{{ project.title }}</strong>"?</p>
+        {% endif %}
+
+        <!-- ✅ Show form validation errors here -->
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <!-- Form -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if mode != "delete" %}
+                <div class="mb-3">
+                    <label><strong>Project Title</strong></label>
+                    {{ form.title }}
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Description</strong></label>
+                    {{ form.description }}
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Budget</strong></label>
+                    {{ form.budget }}
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Deadline</strong></label>
+                    {{ form.deadline }}
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Category</strong></label>
+                    {{ form.category }}
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Upload File (optional)</strong></label>
+                    {{ form.attachment }}
+                </div>
+            {% endif %}
+
+            <!-- Buttons -->
+            {% if mode == "delete" %}
+                <button type="submit" class="btn btn-danger w-100" style="padding:10px; font-size:16px;">
+                    Confirm Delete
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-primary w-100" style="padding:10px; font-size:16px;">
+                    {% if mode == "edit" %}Update Project{% else %}Save Project{% endif %}
+                </button>
+            {% endif %}
+
+            <a href="{% url 'client_dashboard' %}" class="btn btn-secondary w-100 mt-3" style="padding:10px; font-size:16px;">
+                Cancel
+            </a>
+        </form>
+
+        
+    </div>
+</div> 
+
+{% endblock %} 

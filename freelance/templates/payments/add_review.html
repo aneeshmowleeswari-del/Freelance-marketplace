@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h4>Review Freelancer</h4>
+        <hr>
+
+        <p><strong>Project:</strong> {{ payment.project.title }}</p>
+        <p><strong>Freelancer:</strong> {{ payment.freelancer.username }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- STAR RATING -->
+            <div class="mb-3">
+                <label class="form-label"><strong>Rating</strong></label>
+                <select name="rating" class="form-control" required>
+                    <option value="">Select rating</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+            </div>
+
+            <!-- FEEDBACK TEXTAREA -->
+            <div class="mb-3">
+                <label class="form-label"><strong>Feedback</strong></label>
+                <textarea 
+                    name="feedback"
+                    class="form-control"
+                    rows="4"
+                    placeholder="Write your experience..."
+                    required
+                ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

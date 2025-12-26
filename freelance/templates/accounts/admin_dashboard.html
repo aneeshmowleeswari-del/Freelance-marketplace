@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1 style="text-align:center; margin-bottom:30px;">Admin Dashboard</h1>
+
+<!-- ================= STATS ================= -->
+<div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; margin-bottom:40px;">
+
+    <div style="padding:20px; border:1px solid #ccc; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Total Users</h3>
+        <p>{{ total_users }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid #ccc; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Total Clients</h3>
+        <p>{{ total_clients }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid #ccc; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Total Freelancers</h3>
+        <p>{{ total_freelancers }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid #28a745; color:#28a745; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Approved Clients</h3>
+        <p>{{ approved_clients }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid #dc3545; color:#dc3545; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Pending Clients</h3>
+        <p>{{ pending_clients }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid #28a745; color:#28a745; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Approved Freelancers</h3>
+        <p>{{ approved_freelancers }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid #dc3545; color:#dc3545; border-radius:10px; min-width:150px; text-align:center;">
+        <h3>Pending Freelancers</h3>
+        <p>{{ pending_freelancers }}</p>
+    </div>
+</div>
+
+<!-- ================= REVIEWS ================= -->
+<h2>Client Reviews & Ratings</h2>
+
+<table border="1" cellpadding="10" width="100%">
+    <tr>
+        <th>Project</th>
+        <th>Client</th>
+        <th>Freelancer</th>
+        <th>Rating</th>
+        <th>Feedback</th>
+        <th>Date</th>
+    </tr>
+
+    {% for review in reviews %}
+    <tr>
+        <td>{{ review.payment.project.title }}</td>
+        <td>{{ review.client.username }}</td>
+        <td>{{ review.freelancer.username }}</td>
+        <td>{{ review.rating }} ⭐</td>
+        <td>{{ review.feedback }}</td>
+        <td>{{ review.created_at|date:"d M Y" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="6" style="text-align:center;">No reviews yet</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+<h3>Categories and Projects</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>No. of Projects</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.num_projects }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2">No categories found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- ================= PAYMENTS ================= -->
+<h2>Payments Summary</h2>
+<p>Total Payment: {{ total_payment_amount }}</p>
+<p>Admin Commission: {{ total_admin_commission }}</p>
+<p>Freelancer Amount: {{ total_freelancer_amount }}</p>
+
+<table border="1" cellpadding="10" width="100%">
+    <tr>
+        <th>Client</th>
+        <th>Freelancer</th>
+        <th>Category</th>
+        <th>Total</th>
+        <th>Commission</th>
+        <th>Freelancer Amount</th>
+    </tr>
+
+    {% for payment in payments %}
+    <tr>
+        <td>{{ payment.client.username }}</td>
+        <td>{{ payment.freelancer.username }}</td>
+        <td>{{ payment.project.category.name }}</td>
+        <td>{{ payment.total_amount }}</td>
+        <td>{{ payment.admin_amount }}</td>
+        <td>{{ payment.freelancer_amount }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No payments</td></tr>
+    {% endfor %}
+</table>
+
+<!-- ================= FREELANCER APPROVAL ================= -->
+<h2 style="margin-top:40px;">Freelancer Approvals</h2>
+
+<table border="1" cellpadding="10" width="100%" style="text-align:center;">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for freelancer in freelancers %}
+    <tr>
+        <td>{{ freelancer.user.username }}</td>
+        <td>{{ freelancer.user.email }}</td>
+
+        <td>
+            {% if freelancer.user.is_approved %}
+                <span style="color:green; font-size:18px;">✔</span>
+            {% else %}
+                <span style="color:red; font-size:18px;">✖</span>
+            {% endif %}
+        </td>
+        <td>
+           <!-- APPROVE BUTTON -->
+            <a href="{% url 'approve_user' freelancer.user.id %}"
+               style="padding:6px 12px; background:green; color:white; border-radius:5px; text-decoration:none;">
+                Approve
+            </a>
+
+                  <!-- REJECT BUTTON -->
+            <a href="{% url 'reject_user' freelancer.user.id %}"
+               style="padding:6px 12px; background:red; color:white; border-radius:5px; text-decoration:none; margin-left:5px;">
+                Reject
+            </a>
+            
+
+            <a href="{% url 'delete_user' freelancer.user.id %}"
+               style="padding:6px 12px; background:red; color:white; border-radius:5px; text-decoration:none; margin-left:5px;">
+                Delete
+            </a>
+        
+                      
+            
+            
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- ================= CLIENT APPROVAL ================= -->
+<!-- Clients Table -->
+<h2 style="margin-top:40px;">Client Approvals</h2>
+
+<table border="1" cellpadding="10" width="100%" style="text-align:center;">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for client in clients %}
+    <tr>
+        <td>{{ client.user.username }}</td>
+        <td>{{ client.user.email }}</td>
+
+        <!-- STATUS COLUMN -->
+        <td>
+            {% if client.user.is_approved %}
+                <span style="color:green; font-size:18px;">✔ Approved</span>
+            {% else %}
+                <span style="color:red; font-size:18px;">✖ Not Approved</span>
+            {% endif %}
+        </td>
+
+        <!-- ACTION BUTTONS -->
+        <td>
+            <a href="{% url 'approve_user' client.user.id %}"
+               style="padding:6px 12px; background:green; color:white;
+                      border-radius:5px; text-decoration:none;">
+                Approve
+            </a>
+
+            <a href="{% url 'reject_user' client.user.id %}"
+               style="padding:6px 12px; background:red; color:white;
+                      border-radius:5px; text-decoration:none; margin-left:5px;">
+                Reject
+            </a>
+            <a href="{% url 'delete_user' client.user.id %}"
+               style="padding:6px 12px; background:red; color:white;
+                      border-radius:5px; text-decoration:none; margin-left:5px;">
+                Delete
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{%endblock%}

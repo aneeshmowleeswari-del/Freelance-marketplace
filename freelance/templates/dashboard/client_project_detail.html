@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-4">
+        <h2>{{ project.title }}</h2>
+        <p class="text-muted">{{ project.description }}</p>
+    </div>
+
+    <hr>
+
+    <div class="project-details">
+
+        <p>
+            <strong>Status:</strong>
+            <span class="badge bg-secondary">{{ submission.status }}</span>
+        </p>
+
+        <p>
+            <strong>Freelancer Message:</strong><br>
+            {{ submission.message }}
+        </p>
+
+        <p>
+            <strong>Submitted File:</strong>
+            {% if submission.file %}
+                <a href="{{ submission.file.url }}" target="_blank">View File</a>
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </p>
+
+        <p>
+            <strong>GitHub:</strong>
+            {% if submission.github_link %}
+                <a href="{{ submission.github_link }}" target="_blank">
+                    {{ submission.github_link }}
+                </a>
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </p>
+
+        <p>
+            <strong>Live Link:</strong>
+            {% if submission.live_link %}
+                <a href="{{ submission.live_link }}" target="_blank">
+                    {{ submission.live_link }}
+                </a>
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </p>
+
+        <p class="text-muted">
+            Submitted on: {{ submission.created_at|date:"M d, Y, h:i a" }}
+        </p>
+
+        <hr>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label><strong>Client Feedback</strong></label>
+                <textarea class="form-control" name="feedback" rows="4"
+                    placeholder="Write feedback or revision notes..."></textarea>
+            </div>
+
+            <button type="submit" name="action" value="accept" class="btn btn-success">
+                ✓ Accept
+            </button>
+
+            <button type="submit" name="action" value="revision" class="btn btn-warning">
+                ⟳ Request Revision
+            </button>
+
+            <button type="submit" name="action" value="reject" class="btn btn-danger">
+                ✕ Reject
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<style>
+/* FIXED VISIBILITY ISSUE */
+.project-details a,
+.project-details span,
+.project-details p {
+    color: #000 !important;
+    font-weight: 500;
+}
+
+.project-details a:hover {
+    color: #ff2b6a !important;
+    text-decoration: underline;
+}
+</style>
+
+{% endblock %}

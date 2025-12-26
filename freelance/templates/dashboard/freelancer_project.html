@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5" style="max-width:700px;">
+
+    <!-- PROJECT DETAILS -->
+    <h2>{{ project.title }}</h2>
+    <p>{{ project.description }}</p>
+
+    <p><strong>Budget:</strong> ₹{{ project.budget }}</p>
+    <p><strong>Deadline:</strong> {{ project.deadline }}</p>
+    <p><strong>Category:</strong> {{ project.category }}</p>
+
+    {% if project.attachment %}
+        <p>
+            <strong>Attachment:</strong>
+            <a href="{{ project.attachment.url }}" target="_blank">
+                View Attachment
+            </a>
+        </p>
+    {% endif %}
+
+    <hr>
+
+    {% if submission %}
+        <!-- SUBMISSION DETAILS -->
+        <h4>Your Submission</h4>
+
+        {% if submission.message %}
+            <p>{{ submission.message }}</p>
+        {% endif %}
+
+        {% if submission.file %}
+            <p>
+                <strong>File:</strong>
+                <a href="{{ submission.file.url }}" target="_blank" download>
+                    Download File
+                </a>
+            </p>
+        {% endif %}
+
+        {% if submission.github_link %}
+            <p>
+                <strong>GitHub:</strong>
+                <a href="{{ submission.github_link }}" target="_blank">
+                    {{ submission.github_link }}
+                </a>
+            </p>
+        {% endif %}
+
+        {% if submission.live_link %}
+            <p>
+                <strong>Live:</strong>
+                <a href="{{ submission.live_link }}" target="_blank">
+                    {{ submission.live_link }}
+                </a>
+            </p>
+        {% endif %}
+
+        <!-- STATUS -->
+        <p>
+            <strong>Status:</strong>
+            <span class="
+                {% if submission.review_status == 'accepted' %} text-success
+                {% elif submission.review_status == 'revision' %} text-warning
+                {% elif submission.review_status == 'rejected' %} text-danger
+                {% else %} text-secondary
+                {% endif %}
+            ">
+                {{ submission.get_review_status_display }}
+            </span>
+        </p>
+
+        <!-- CLIENT FEEDBACK -->
+        {% if submission.client_feedback %}
+            <div class="alert alert-warning mt-3">
+                <strong>Client Feedback:</strong><br>
+                {{ submission.client_feedback }}
+            </div>
+        {% endif %}
+
+        <!-- RESUBMIT ONLY IF REVISION -->
+        {% if submission.review_status == "revision" %}
+            <div class="d-flex justify-content-center mt-3">
+                <a href="{% url 'submission_page' project.id %}"
+                   class="btn btn-danger px-4">
+                    Resubmit Work
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- ACCEPTED MESSAGE -->
+        {% if submission.review_status == "accepted" %}
+            <div class="alert alert-success mt-3">
+                ✔ Your work has been accepted. No further submission required.
+            </div>
+        {% endif %}
+
+    {% else %}
+        <!-- NO SUBMISSION YET -->
+        <p class="text-muted">You haven’t submitted work yet.</p>
+
+        <div class="d-flex justify-content-center mt-3">
+            <a href="{% url 'submission_page' project.id %}"
+               class="btn btn-danger px-4">
+                Submit Work
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- BACK BUTTON -->
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{% url 'freelancer_dashboard' %}"
+           class="btn btn-outline-danger px-4">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5" style="max-width:600px;">
+
+    <h3>Submit Work</h3>
+    <p><strong>Project:</strong> {{ project.title }}</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea name="message" class="form-control"
+                      placeholder="Describe your work"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Upload File</label>
+            <input type="file" name="file" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">GitHub Link</label>
+            <input type="url" name="github_link" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Live Demo Link</label>
+            <input type="url" name="live_link" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+
+        <a href="{% url 'view_freelancer_project' project.id %}"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+
+</div>
+{% endblock %}
